@@ -7,34 +7,48 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
+import android.content.Context;
+import android.database.SQLException;
 
 
 public class MainActivity extends ActionBarActivity {
-
 
     private TextView TV;
     private int X = 1;
     private ProgressBar PB;
 
     public MainActivity() {
-        TV = (TextView) findViewById(R.id.txtView);
-        PB = (ProgressBar) findViewById(R.id.pgBar);
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        //super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TV = (TextView) findViewById(R.id.txtView);
+        PB = (ProgressBar) findViewById(R.id.pgBar);
         PB.setMax(1000);
+        String DB_NAME = "Database.db";
+        String DB_PATH = "assets/";
+        DB_Helper mDbHelper = new DB_Helper(getApplicationContext());
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String SQL = "SELECT * FROM sqlite_master WHERE type='table'";
+
+        Cursor cur = db.rawQuery(SQL, null);
+        int contTablas = cur.getCount();
+
         //Handler mHandler = new Handler();
-        while (X<=10000) {
+        /*while (X<=10000) {
             PB.setProgress(X);
             TV.setText("Procesando elemento " + X + " de 1000");
             X+=1;
             //mHandler.postDelayed(Updater, 1000);
-        }
+        }*/
 
-        TV.setText("Proceso finalizado!!");
+        TV.setText("Se han procesado " + contTablas + " tablas!!");
     }
 
     /*private Runnable Updater = new Runnable() {
