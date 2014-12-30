@@ -1,23 +1,22 @@
 package mycomp.trivia;
 
-import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.database.sqlite.SQLiteDatabase;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.database.Cursor;
-import android.content.Context;
-import android.database.SQLException;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
-
-    private TextView TV;
-    private int X = 1;
-    private ProgressBar PB;
+    DB_Helper mDbHelper;
+    private ListView LTablas;
+    private ArrayList<String> Elementos = new ArrayList<String>();
+    private ArrayAdapter<String> adapter;
 
     public MainActivity() {
 
@@ -25,40 +24,35 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TV = (TextView) findViewById(R.id.txtView);
-        PB = (ProgressBar) findViewById(R.id.pgBar);
-        PB.setMax(1000);
-        String DB_NAME = "Database.db";
-        String DB_PATH = "assets/";
-        DB_Helper mDbHelper = new DB_Helper(getApplicationContext());
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        String SQL = "SELECT * FROM sqlite_master WHERE type='table'";
+        mDbHelper = new DB_Helper(this);
 
-        Cursor cur = db.rawQuery(SQL, null);
-        int contTablas = cur.getCount();
-
-        //Handler mHandler = new Handler();
-        /*while (X<=10000) {
-            PB.setProgress(X);
-            TV.setText("Procesando elemento " + X + " de 1000");
-            X+=1;
-            //mHandler.postDelayed(Updater, 1000);
-        }*/
-
-        TV.setText("Se han procesado " + contTablas + " tablas!!");
-    }
-
-    /*private Runnable Updater = new Runnable() {
-        @Override
-        public void run() {
-            PB.setProgress(X);
-            TV.setText("Procesando elemento " + X + " de " + PB.getMax());
-            X+=1;
+        try {
+            mDbHelper.createDataBase();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-    };*/
+
+        Cursor cur = mDbHelper.getData();
+
+        cur.moveToFirst();
+        while (cur.isAfterLast() == false)
+        {
+            Elementos.add(cur.getString(0));
+            cur.moveToNext();
+        }
+
+        adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_list_item_1,Elementos);
+        LTablas = (ListView) findViewById(R.id.lstTablas);
+        LTablas.setAdapter(adapter);
+
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
