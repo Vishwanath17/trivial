@@ -109,7 +109,15 @@ public class DB_Helper extends SQLiteOpenHelper{
         myDataBase = SQLiteDatabase.openDatabase(myPath, null,
                 SQLiteDatabase.OPEN_READONLY);
         // Note: Master is the one table in External db. Here we trying to access the records of table from external db.
-        return myDataBase.rawQuery("SELECT tbl_name FROM sqlite_master", null);
+        return myDataBase.rawQuery("SELECT name FROM sqlite_master where name <> 'android_metadata' order by name", null);
+    }
+
+    public Cursor getData(String Table) {
+        String myPath = DB_PATH + DB_NAME;
+        myDataBase = SQLiteDatabase.openDatabase(myPath, null,
+                SQLiteDatabase.OPEN_READONLY);
+        // Note: Master is the one table in External db. Here we trying to access the records of table from external db.
+        return myDataBase.rawQuery("SELECT * FROM " + Table , null);
     }
 
 

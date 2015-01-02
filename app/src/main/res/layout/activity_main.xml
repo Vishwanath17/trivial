@@ -11,18 +11,28 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Tablas cargadas de la BD"
-        android:id="@+id/txtTitulo"
+        android:id="@+id/txtNormal"
+        android:singleLine="false"
+        android:text="Normal"
+        android:textColor="@android:color/holo_blue_light"
+        android:layout_marginTop="157dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="32dp"
+        android:clickable="true"
+        android:onClick="ComenzarClick"/>
 
-    <ListView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lstTablas"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/txtCustom"
+        android:layout_below="@+id/txtNormal"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/txtTitulo"
-        android:background="@android:color/black" />
-
+        android:layout_marginTop="67dp"
+        android:text="Seleccionar temas"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="32dp"
+        android:clickable="true"
+        android:onClick="CustomClick"/>
 </RelativeLayout>

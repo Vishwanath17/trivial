@@ -1,32 +1,41 @@
 package mycomp.trivia;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.database.Cursor;
-
+import android.view.View;
+import android.widget.TextView;
+import android.app.AlertDialog;
+import java.util.*;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
     DB_Helper mDbHelper;
-    private ListView LTablas;
-    private ArrayList<String> Elementos = new ArrayList<String>();
-    private ArrayAdapter<String> adapter;
-
+    List<String> Temas = new ArrayList<>();
     public MainActivity() {
 
+    }
+
+    private void ShowDialog(String mensaje,String titulo){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(mensaje)
+                .setPositiveButton(titulo, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.show();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mDbHelper = new DB_Helper(this);
 
         try {
@@ -41,16 +50,12 @@ public class MainActivity extends ActionBarActivity {
         cur.moveToFirst();
         while (cur.isAfterLast() == false)
         {
-            Elementos.add(cur.getString(0));
+            Cursor cTema = mDbHelper.getData(cur.getString(0));
+            cTema.moveToFirst();
+            Temas.add(cur.getString(0));
+            System.gc();
             cur.moveToNext();
         }
-
-        adapter = new ArrayAdapter<String>(getApplicationContext(),
-                android.R.layout.simple_list_item_1,Elementos);
-        LTablas = (ListView) findViewById(R.id.lstTablas);
-        LTablas.setAdapter(adapter);
-
-
 
     }
 
@@ -74,5 +79,22 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void ComenzarClick(View v) {
+
+    }
+    public void CustomClick (View v) {
+        //Convertimos la lista a array para poder pasarla como parametro a
+        //la siguiente actividad
+
+        String[] tarray = Temas.toArray(new String[Temas.size()]);
+
+        //Starting a new Intent
+        Intent sel = new Intent(getApplicationContext(), selector.class);
+
+        //Sending data to another Activity
+        sel.putExtra("temas", tarray);
+        startActivity(sel);
     }
 }
