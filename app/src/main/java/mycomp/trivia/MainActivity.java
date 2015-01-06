@@ -82,7 +82,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void ComenzarClick(View v) {
+        //Starting a new Intent
+        Intent sel = new Intent(getApplicationContext(), Juego.class);
 
+        String[] tarray = Temas.toArray(new String[Temas.size()]);
+        //Sending data to another Activity
+        sel.putExtra("temas", tarray);
+
+        startActivity(sel);
     }
     public void CustomClick (View v) {
         //Convertimos la lista a array para poder pasarla como parametro a
